@@ -1,12 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:imsnitc/Dashboard.dart';
+import 'dart:async';
 
 class Login extends StatelessWidget {
   const Login({super.key});
 
+  Future<void> _handleGoogleSignIn(BuildContext context) async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    try {
+      final GoogleSignInAccount? account = await googleSignIn.signIn();
+
+      if (account != null) {
+        final email = account.email;
+
+        if (email.endsWith('@nitc.ac.in')) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Dashboard(),
+            ),
+          );
+
+          _startAutoSignOutTimer(context, googleSignIn);
+        } else {
+          await googleSignIn.signOut();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Only @nitc.ac.in emails are allowed'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (error) {
+      print('Google Sign-In Error: $error');
+    }
+  }
+
+  void _startAutoSignOutTimer(BuildContext context, GoogleSignIn googleSignIn) {
+    Timer(Duration(minutes: 2), () async {
+      await googleSignIn.signOut();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Login()),
+      );
+      print("User signed out due to inactivity.");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+      backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -23,17 +70,13 @@ class Login extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'lib/images/google.jpg',
-                height: 46,
-              ),
-            ],
+          const SizedBox(height: 10),
+          GestureDetector(
+            onTap: () => _handleGoogleSignIn(context),
+            child: Image.asset(
+              'lib/images/google.jpg',
+              height: 46,
+            ),
           ),
           const SizedBox(height: 20),
           const Text(
