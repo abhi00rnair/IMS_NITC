@@ -1,9 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
+require('dotenv').config({path:'./url.env'});
 
 const app = express();
 
-const mongoURI = "mongodb+srv://itsmeabhayrnair:mongodb%40123@cluster0.0pijabf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongoURI = process.env.MONGO_URI;
 
 async function connectToDB() {
   try {
