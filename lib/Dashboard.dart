@@ -1,7 +1,38 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:imsnitc/models/studentdash.dart';
+import 'package:imsnitc/parent_info.dart';
+import 'package:imsnitc/services/api.dart';
 
-class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
+class Dashboard extends StatefulWidget {
+  final idtoken;
+  const Dashboard({super.key, required this.idtoken});
+
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  Studentdash? _student;
+
+  @override
+  void initState() {
+    super.initState();
+    print("Received idToken: ${widget.idtoken}");
+    fetchStudentDetails();
+  }
+
+  Future<void> fetchStudentDetails() async {
+    final student = await ApiService.getStudent(widget.idtoken);
+    if (student != null) {
+      setState(() {
+        _student = student;
+      });
+    } else {
+      print("Student not found or error occurred");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +59,7 @@ class Dashboard extends StatelessWidget {
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
-          children: <Widget>[
+          children: [
             const DrawerHeader(
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 141, 138, 140),
@@ -42,73 +73,100 @@ class Dashboard extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text("Info"),
-            ),
+                leading: Icon(Icons.home),
+                title: Text("Parent Info"),
+                onTap: () {
+                  if (_student != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ParentInfo(studentinfo: _student!),
+                      ),
+                    );
+                  }
+                }),
+            ListTile(leading: Icon(Icons.book), title: Text('My Courses')),
+            ListTile(leading: Icon(Icons.payment), title: Text('Fee Payment')),
             ListTile(
-              leading: const Icon(Icons.book),
-              title: const Text('My Courses'),
-              onTap: () {},
-            ),
+                leading: Icon(Icons.contact_page_sharp),
+                title: Text("Results")),
             ListTile(
-              leading: const Icon(Icons.payment),
-              title: const Text('Fee Payment'),
-              onTap: () {},
-            ),
-            const ListTile(
-              leading: Icon(Icons.contact_page_sharp),
-              title: Text("Results"),
-            ),
-            const ListTile(
-              leading: Icon(Icons.person),
-              title: Text('Student Progression'),
-            ),
-            const ListTile(
-              leading: Icon(Icons.email),
-              title: Text("Leave Details"),
-            ),
-            const ListTile(
-              leading: Icon(Icons.card_membership),
-              title: Text("Admission card"),
-            ),
+                leading: Icon(Icons.person),
+                title: Text('Student Progression')),
+            ListTile(leading: Icon(Icons.email), title: Text("Leave Details")),
+            ListTile(
+                leading: Icon(Icons.card_membership),
+                title: Text("Admission card")),
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const SizedBox(height: 40),
-            Center(
-              child: Container(
-                padding: const EdgeInsets.all(2),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.grey,
-                ),
-                child: const CircleAvatar(
-                  radius: 70,
-                  backgroundImage: AssetImage("lib/images/images.jpg"),
-                ),
+      body: _student == null
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  const SizedBox(height: 40),
+                  Center(
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey,
+                      ),
+                      child: const CircleAvatar(
+                        radius: 70,
+                        backgroundImage: AssetImage("lib/images/images.jpg"),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      /*Image.asset(
+                        'lib/images/max.webp',
+                        width: 100,
+                        height: 70,
+                      ),
+                      Image.asset(
+                        'lib/images/meter.jpg',
+                        width: 100,
+                        height: 70,
+                      ),
+                      Image.asset(
+                        'lib/images/11.jpg',
+                        height: 70,
+                        width: 100,
+                      )*/
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      StatBox(value: _student!.Min_credits.toString()),
+                      StatBox(value: _student!.Credit_earned.toString()),
+                      StatBox(value: _student!.cgpa.toString()),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
+                  InfoBox(label: 'Name', value: _student!.name),
+                  InfoBox(label: 'Roll Number', value: _student!.rollno),
+                  InfoBox(label: 'Email', value: _student!.email),
+                  InfoBox(label: 'Phone Number', value: _student!.phone),
+                  InfoBox(label: 'DOB', value: _student!.DOB),
+                  InfoBox(label: 'Degree', value: _student!.Degree),
+                  InfoBox(label: 'Gender', value: _student!.Gender),
+                  InfoBox(
+                      label: 'Specialisation', value: _student!.Specialisation),
+                  InfoBox(
+                      label: 'Admission_scheme',
+                      value: _student!.Admission_scheme),
+                  InfoBox(label: 'APAAR_ID', value: _student!.APAAR_ID),
+                ],
               ),
             ),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                StatBox(value: '160'),
-                StatBox(value: '99'),
-                StatBox(value: '6.65'),
-              ],
-            ),
-            const SizedBox(height: 30),
-            InfoBox(label: 'Name', value: 'John Doe'),
-            InfoBox(label: 'Roll Number', value: 'B23CS999'),
-            InfoBox(label: 'Gmail', value: 'john.doe@example.com'),
-            InfoBox(label: 'Phone Number', value: '+91 9876543210'),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -140,10 +198,13 @@ class InfoBox extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(fontSize: 16),
-              overflow: TextOverflow.ellipsis,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Text(
+                value,
+                style: const TextStyle(fontSize: 16),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ),
         ],
@@ -153,7 +214,7 @@ class InfoBox extends StatelessWidget {
 }
 
 class StatBox extends StatelessWidget {
-  final String value;
+  final dynamic value;
 
   const StatBox({required this.value, super.key});
 

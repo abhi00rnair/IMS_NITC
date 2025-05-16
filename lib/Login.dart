@@ -7,23 +7,38 @@ class Login extends StatelessWidget {
   const Login({super.key});
 
   Future<void> _handleGoogleSignIn(BuildContext context) async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email'],
+        serverClientId:
+            '392997688760-dlt5g8sgesklgjhpjcotu75ks00oderq.apps.googleusercontent.com');
     try {
       final GoogleSignInAccount? account = await googleSignIn.signIn();
-
       if (account != null) {
         final email = account.email;
 
         if (email.endsWith('@nitc.ac.in')) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const Dashboard(),
-            ),
-          );
+          final GoogleSignInAuthentication auth = await account.authentication;
+          final idToken = auth.idToken;
+          print("Id token received**: $idToken");
 
-          _startAutoSignOutTimer(context, googleSignIn);
+          if (idToken != null) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Dashboard(idtoken: idToken),
+              ),
+            );
+
+            _startAutoSignOutTimer(context, googleSignIn);
+          } else {
+            print('idToken is null');
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Failed to get idToken from Google'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
         } else {
           await googleSignIn.signOut();
           ScaffoldMessenger.of(context).showSnackBar(
@@ -40,7 +55,7 @@ class Login extends StatelessWidget {
   }
 
   void _startAutoSignOutTimer(BuildContext context, GoogleSignIn googleSignIn) {
-    Timer(Duration(minutes: 2), () async {
+    Timer(Duration(seconds: 120), () async {
       await googleSignIn.signOut();
       Navigator.pushReplacement(
         context,
