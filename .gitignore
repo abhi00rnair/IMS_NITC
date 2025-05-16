@@ -41,6 +41,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-/android/app/google-servvices.json
+/android/app/google-services.json
 /server/url.env
 /lib/ui.env
