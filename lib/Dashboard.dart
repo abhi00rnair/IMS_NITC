@@ -37,9 +37,9 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 141, 138, 140),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
         title: const Text(
           "STUDENT LANDING PROFILE",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -57,19 +57,20 @@ class _DashboardState extends State<Dashboard> {
         centerTitle: true,
       ),
       drawer: Drawer(
+        backgroundColor: Colors.white,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 141, 138, 140),
+                color: Color.fromARGB(255, 255, 255, 255),
               ),
               child: Text(
                 'Settings',
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             ListTile(
@@ -104,66 +105,66 @@ class _DashboardState extends State<Dashboard> {
       body: _student == null
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 40),
-                  Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey,
-                      ),
-                      child: const CircleAvatar(
-                        radius: 70,
-                        backgroundImage: AssetImage("lib/images/images.jpg"),
-                      ),
+                  Image.asset(
+                    'lib/images/title1.jpg',
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  Image.asset(
+                    'lib/images/NIT-Calicut.jpeg',
+                    height: 150,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 40),
+                        Center(
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey,
+                            ),
+                            child: const CircleAvatar(
+                              radius: 70,
+                              backgroundImage:
+                                  AssetImage("lib/images/images.jpg"),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            StatBox(value: _student!.Min_credits.toString()),
+                            StatBox(value: _student!.Credit_earned.toString()),
+                            StatBox(value: _student!.cgpa.toString()),
+                          ],
+                        ),
+                        const SizedBox(height: 30),
+                        InfoBox(label: 'Name', value: _student!.name),
+                        InfoBox(label: 'Roll Number', value: _student!.rollno),
+                        InfoBox(label: 'Email', value: _student!.email),
+                        InfoBox(label: 'Phone Number', value: _student!.phone),
+                        InfoBox(label: 'DOB', value: _student!.DOB),
+                        InfoBox(label: 'Degree', value: _student!.Degree),
+                        InfoBox(label: 'Gender', value: _student!.Gender),
+                        InfoBox(
+                            label: 'Specialisation',
+                            value: _student!.Specialisation),
+                        InfoBox(
+                            label: 'Admission_scheme',
+                            value: _student!.Admission_scheme),
+                        InfoBox(label: 'APAAR_ID', value: _student!.APAAR_ID),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      /*Image.asset(
-                        'lib/images/max.webp',
-                        width: 100,
-                        height: 70,
-                      ),
-                      Image.asset(
-                        'lib/images/meter.jpg',
-                        width: 100,
-                        height: 70,
-                      ),
-                      Image.asset(
-                        'lib/images/11.jpg',
-                        height: 70,
-                        width: 100,
-                      )*/
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      StatBox(value: _student!.Min_credits.toString()),
-                      StatBox(value: _student!.Credit_earned.toString()),
-                      StatBox(value: _student!.cgpa.toString()),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  InfoBox(label: 'Name', value: _student!.name),
-                  InfoBox(label: 'Roll Number', value: _student!.rollno),
-                  InfoBox(label: 'Email', value: _student!.email),
-                  InfoBox(label: 'Phone Number', value: _student!.phone),
-                  InfoBox(label: 'DOB', value: _student!.DOB),
-                  InfoBox(label: 'Degree', value: _student!.Degree),
-                  InfoBox(label: 'Gender', value: _student!.Gender),
-                  InfoBox(
-                      label: 'Specialisation', value: _student!.Specialisation),
-                  InfoBox(
-                      label: 'Admission_scheme',
-                      value: _student!.Admission_scheme),
-                  InfoBox(label: 'APAAR_ID', value: _student!.APAAR_ID),
+                  )
                 ],
               ),
             ),

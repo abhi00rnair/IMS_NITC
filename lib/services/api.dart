@@ -1,10 +1,9 @@
 import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import '../models/studentdash.dart';
 
 class ApiService {
-  static String baseUrl = 'http://192.168.159.97:2000/api/student';
+  static String baseUrl = 'http://192.168.1.3:2000/api/student';
 
   static Future<Studentdash?> getStudent(String token) async {
     print("🔁 Attempting to fetch student data...");

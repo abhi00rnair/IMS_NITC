@@ -14,8 +14,13 @@ class _ParentInfoState extends State<ParentInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Parent Information"),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        title: const Text(
+          "PARENT INFORMATION",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
