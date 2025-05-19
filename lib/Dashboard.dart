@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:imsnitc/models/studentdash.dart';
 import 'package:imsnitc/parent_info.dart';
@@ -39,7 +40,7 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: Color.fromARGB(255, 170, 166, 166),
         title: const Text(
           "STUDENT LANDING PROFILE",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -63,7 +64,7 @@ class _DashboardState extends State<Dashboard> {
           children: [
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 255, 255, 255),
+                color: Color.fromARGB(255, 170, 166, 166),
               ),
               child: Text(
                 'Settings',
@@ -113,12 +114,6 @@ class _DashboardState extends State<Dashboard> {
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
-                  Image.asset(
-                    'lib/images/NIT-Calicut.jpeg',
-                    height: 150,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -129,24 +124,39 @@ class _DashboardState extends State<Dashboard> {
                             padding: const EdgeInsets.all(2),
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.grey,
+                              color: Color.fromARGB(255, 255, 255, 255),
                             ),
-                            child: const CircleAvatar(
-                              radius: 70,
-                              backgroundImage:
-                                  AssetImage("lib/images/images.jpg"),
+                            child: Container(
+                              width: 140,
+                              height: 140,
+                              decoration: BoxDecoration(
+                                image: const DecorationImage(
+                                  image: AssetImage("lib/images/dp.jpg"),
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Colors.grey,
+                                  width: 3,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                         const SizedBox(height: 30),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            StatBox(value: _student!.Min_credits.toString()),
-                            StatBox(value: _student!.Credit_earned.toString()),
-                            StatBox(value: _student!.cgpa.toString()),
-                          ],
-                        ),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              StatBox(
+                                  value: _student!.Min_credits.toString(),
+                                  imagePath: 'lib/images/max.jpg'),
+                              StatBox(
+                                  value: _student!.cgpa.toString(),
+                                  imagePath: 'lib/images/cgpafin.jpg'),
+                              StatBox(
+                                  value: _student!.Credit_earned.toString(),
+                                  imagePath: 'lib/images/min.png'),
+                            ]),
                         const SizedBox(height: 30),
                         InfoBox(label: 'Name', value: _student!.name),
                         InfoBox(label: 'Roll Number', value: _student!.rollno),
@@ -215,19 +225,24 @@ class InfoBox extends StatelessWidget {
 }
 
 class StatBox extends StatelessWidget {
-  final dynamic value;
+  final String value;
+  final String imagePath;
 
-  const StatBox({required this.value, super.key});
+  const StatBox({
+    required this.value,
+    required this.imagePath,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 60,
-      height: 50,
+      height: 70,
       margin: const EdgeInsets.symmetric(horizontal: 5),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 225, 225, 225),
+        color: const Color.fromARGB(255, 225, 225, 225),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.black, width: 1.5),
         boxShadow: [
@@ -238,14 +253,28 @@ class StatBox extends StatelessWidget {
           ),
         ],
       ),
-      child: Center(
-        child: Text(
-          value,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: Image.asset(
+              imagePath,
+              width: 30,
+              height: 30,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
+          const SizedBox(height: 5),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

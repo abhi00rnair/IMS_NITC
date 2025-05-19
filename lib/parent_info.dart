@@ -16,7 +16,7 @@ class _ParentInfoState extends State<ParentInfo> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: Color.fromARGB(255, 170, 166, 166),
         title: const Text(
           "PARENT INFORMATION",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
